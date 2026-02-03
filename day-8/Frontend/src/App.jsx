@@ -34,11 +34,29 @@ const App = () => {
   }
 
   function HandleDeleteNote(noteId) {
-    axios.delete("http://localhost:3000/notes/" + noteId)
-    .then((res) => {
+    axios.delete("http://localhost:3000/notes/" + noteId).then((res) => {
       console.log(res.data);
       FetchNotes();
     });
+  }
+
+  function HandleUpdate(noteId) {
+    const newTitle = prompt("Enter new title (leave empty if not changing)");
+    const newDescription = prompt(
+      "Enter new description (leave empty if not changing)",
+    );
+
+    const updatedData = {};
+
+    if (newTitle) updatedData.title = newTitle;
+    if (newDescription) updatedData.description = newDescription;
+
+    axios
+      .patch("http://localhost:3000/notes/" + noteId, updatedData)
+      .then((res) => {
+        console.log(res.data);
+        FetchNotes();
+      });
   }
 
   return (
@@ -55,13 +73,22 @@ const App = () => {
             <div className="note">
               <h1>{note.title}</h1>
               <p>{note.description}</p>
-              <button
-                onClick={() => {
-                  HandleDeleteNote(note._id);
-                }}
-              >
-                delete
-              </button>
+              <div className="btn">
+                <button
+                  onClick={() => {
+                    HandleDeleteNote(note._id);
+                  }}
+                >
+                  delete
+                </button>
+                <button
+                  onClick={() => {
+                    HandleUpdate(note._id);
+                  }}
+                >
+                  Update Note
+                </button>
+              </div>
             </div>
           );
         })}

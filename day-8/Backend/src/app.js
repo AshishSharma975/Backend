@@ -50,9 +50,9 @@ res.status(200).json({
 
 app.patch("/notes/:id",async (req,res)=>{
     const id = req.params.id;
-    const {description} = req.body;
+    const {description,title} = req.body;
 
-    await noteModel.findByIdAndUpdate(id,{description})
+    await noteModel.findByIdAndUpdate(id,{description,title})
 
     res.status(200).json({
         message:"Note updated successfully"
