@@ -41,9 +41,9 @@ const App = () => {
   }
 
   function HandleUpdate(noteId) {
-    const newTitle = prompt("Enter new title (leave empty if not changing)");
+    const newTitle = prompt("Enter your new title (leave empty if not changing)");
     const newDescription = prompt(
-      "Enter new description (leave empty if not changing)",
+      "Enter your new description (leave empty if not changing)",
     );
 
     const updatedData = {};
@@ -60,7 +60,7 @@ const App = () => {
   }
 
 
-  
+
 
   return (
     <>
