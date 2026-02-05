@@ -1,9 +1,17 @@
 const express = require('express')
+
 const noteModel = require('./models/Note.Model')
+
 const cors = require('cors')
+
 const app = express()
+
 app.use(cors())
+
 app.use(express.json())
+
+app.use(express.static("./public"))
+
 const path = require('path')
 
 // POST
@@ -63,7 +71,8 @@ app.patch("/notes/:id",async (req,res)=>{
 
 
 app.use('*name',(req,res)=>{
-    res.sendFile(path.join(__dirname,"/public\index.html"))
+    res.sendFile(path.join(__dirname, "..", "public", "index.html"))
+
 })
 
 
