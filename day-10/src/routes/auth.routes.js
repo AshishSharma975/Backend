@@ -2,6 +2,7 @@ const express = require("express");
 const UserModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const AuthRouter = express.Router();
+const crypto = require("crypto")
 
 AuthRouter.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
@@ -13,10 +14,14 @@ AuthRouter.post("/register", async (req, res) => {
     });
   }
 
+
+  // hashing password  
+  const hash = crypto.createHash("md5").update(password).digest("hex")
+
   const user = await UserModel.create({
     name,
     email,
-    password,
+    password : hash,
   });
 
   const token = jwt.sign(
@@ -57,7 +62,7 @@ AuthRouter.post("/login", async (req, res) => {
       message: "user not found with this email address",
     });
   }
-  const isPasswordMatched = user.password === password;
+  const isPasswordMatched = user.password === crypto.createHash("md5").update(password).digest("hex");
 
   if (!isPasswordMatched) {
     return res.status(401).json({
