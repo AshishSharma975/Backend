@@ -14,7 +14,7 @@ AuthRouter.post("/register", async (req, res) => {
     });
   }
 
-
+  
   // hashing password  
   const hash = crypto.createHash("md5").update(password).digest("hex")
 
@@ -31,6 +31,7 @@ AuthRouter.post("/register", async (req, res) => {
     },
     process.env.jwt_SECRET,
   );
+
 
   res.cookie("jwt_token", token);
 
