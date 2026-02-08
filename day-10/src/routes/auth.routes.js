@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const AuthRouter = express.Router();
 const crypto = require("crypto")
 
+
+
 AuthRouter.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -15,6 +17,7 @@ AuthRouter.post("/register", async (req, res) => {
   }
 
   
+
   // hashing password  
   const hash = crypto.createHash("md5").update(password).digest("hex")
 
@@ -23,6 +26,8 @@ AuthRouter.post("/register", async (req, res) => {
     email,
     password : hash,
   });
+
+
 
   const token = jwt.sign(
     {
@@ -33,6 +38,7 @@ AuthRouter.post("/register", async (req, res) => {
   );
 
 
+
   res.cookie("jwt_token", token);
 
   res.status(201).json({
@@ -41,6 +47,7 @@ AuthRouter.post("/register", async (req, res) => {
     token,
   });
 });
+
 
 // /api/auth/protected
 AuthRouter.post("/protected", (req, res) => {
