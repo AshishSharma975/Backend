@@ -1,80 +1,104 @@
-const express = require("express")
-const userModel = require("../models/user.model")
+const express = require("express");
+const userModel = require("../models/user.model");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
-const authRouter = express.Router()
-const crypto = require("crypto")
-const jwt = require("jsonwebtoken")
+const authRouter = express.Router();
 
-
-
-authRouter.post("/register", async (req,res)=>{
-    const {email,username, password,bio,profileImage} = req.body
-
-    // const isUserExistByEmail = await userModel.findOne({email})
-
-    // if(isUserExistByEmail){
-    //     return res.status(409).json({
-    //         message:"user already with same email"
-    //     })
-    // }
-
-    // const isUserExistByUsername = await userModel.findOne({username})
-
-    // if(isUserExistByUsername){
-    //     return res.status(409).json({
-    //         message:"user already exist by user"
-    //     })
-    // }
+// REGISTER
+authRouter.post("/register", async (req, res) => {
+  try {
+    const { email, username, password, bio, profileImage } = req.body;
 
     const isUserAlreadyExist = await userModel.findOne({
-        $or:[
-            {
-                username
-            },
-            {
-                email
-            }
-        ]
-    })
-    if(isUserAlreadyExist){
-        return res.status(409).json({
-            message:"user already exist" + (isUserAlreadyExist).email == email ? "email already exist": "username already exist"
-        })
+      $or: [{ username }, { email }],
+    });
+
+    if (isUserAlreadyExist) {
+      return res.status(409).json({
+        message:
+          isUserAlreadyExist.email === email
+            ? "email already exist"
+            : "username already exist",
+      });
     }
 
-    const hash = crypto.createHash("md5").update(password).digest("hex")
+    const hash = crypto.createHash("md5").update(password).digest("hex");
 
     const user = await userModel.create({
-        username,
-        password:hash,
-        email,
-        bio,
-        profileImage
-    })
+      username,
+      password: hash,
+      email,
+      bio,
+      profileImage,
+    });
 
     const token = jwt.sign(
-        {
-        id:user._id
-       },
-       process.env.JWT_SECRET,{
-        expiresIn:"1d"
-       })
-    res.cookie("token", token)
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.cookie("token", token);
 
     res.status(201).json({
-        message:"user registered successfully",
-        user:{
-          email:user.email,
-          username:user.username,
-          bio:user.bio,
-          profileImage:user.profileImage
-        }
-    })
-})
+      message: "user registered successfully",
+      user: {
+        email: user.email,
+        username: user.username,
+        bio: user.bio,
+        profileImage: user.profileImage,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: "server error", error: err.message });
+  }
+});
 
+// LOGIN
+authRouter.post("/login", async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
 
-authRouter.post("/login",async (req,res)=>{
-    
-})
+    const user = await userModel.findOne({
+      $or: [{ username }, { email }],
+    });
 
-module.exports = authRouter
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found",
+      });
+    }
+
+    const hash = crypto.createHash("md5").update(password).digest("hex");
+    const isPasswordValid = hash === user.password;
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "password is invalid",
+      });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.cookie("token", token);
+
+    res.status(200).json({
+      message: "login successful",
+      user: {
+        email: user.email,
+        username: user.username,
+        bio: user.bio,
+        profileImage: user.profileImage,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: "server error", error: err.message });
+  }
+});
+
+module.exports = authRouter;
