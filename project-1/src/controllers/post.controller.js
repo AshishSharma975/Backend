@@ -25,7 +25,7 @@ async function createPostController(req, res) {
      decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
     return res.status(401).json({
-      message: "user not authorized",
+      message: "user not authorized.",
     });
   }
 
