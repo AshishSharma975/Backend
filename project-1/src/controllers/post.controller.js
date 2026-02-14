@@ -15,7 +15,7 @@ async function createPostController(req, res) {
 
   if (!token) {
     return res.status(401).json({
-      message: "token not provided, unathorized access",
+      message: "token not provided, unathorized access.",
     });
   }
 
