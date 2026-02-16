@@ -48,6 +48,8 @@ async function loginController (req, res)  {
   }
 };
 
+
+
  async function RegisterController (req, res) {
   try {
     const { email, username, password, bio, profileImage } = req.body;
