@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     profileImage:{
         type:String,
         default:"https://ik.imagekit.io/8scpvma7j/24-248253_user-profile-default-image-png-clipart-png-download.png"
-    }
+    },
+    
 })
 
 const userModel = mongoose.model("users", userSchema)
