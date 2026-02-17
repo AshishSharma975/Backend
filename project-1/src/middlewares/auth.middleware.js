@@ -1,9 +1,11 @@
-async function name(req,res,next) {
+const jwt = require("jsonwebtoken")
+
+async function identifyUser(req,res,next) {
      const token = req.cookies.token;
 
     if(!token){
         return res.status(401).json({
-            message: "anauthorized access.",
+            message: "unauthorized access.",
         })
     }
 
@@ -16,4 +18,10 @@ async function name(req,res,next) {
             message: "invalid token.",
         })
     }
+
+    req.user= decoded
+
+    next()
 }
+
+module.exports = identifyUser
