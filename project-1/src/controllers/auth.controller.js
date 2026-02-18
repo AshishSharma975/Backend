@@ -27,7 +27,9 @@ async function loginController (req, res)  {
     }
 
     const token = jwt.sign(
-      { id: user._id },
+      { id: user._id ,
+        username:user.username
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -78,7 +80,9 @@ async function loginController (req, res)  {
     });
 
     const token = jwt.sign(
-      { id: user._id },
+      { id: user._id ,
+        username:user.username
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
