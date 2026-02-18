@@ -1,40 +1,74 @@
 const { json } = require("express")
 const followModel = require("../models/follow.model")
+const userModel = require("../models/user.model")
 
-async function followUserController(req,res) {
+async function followUserController(req, res) {
+  const followerUsername = req.user.username
+  const followingUsername = req.params.username
+
+  if (followingUsername === followerUsername) {
+    return res.status(400).json({
+      message: "you cannot follow yourself."
+    })
+  }
+
+  const isFollwingExist = await userModel.findOne({
+    username: followingUsername
+  })
+
+  if (!isFollwingExist) {
+    return res.status(404).json({
+      message: "user you are try to follow does not exist.",
+    })
+  }
+
+  const isAlreadyFollowing = await followModel.findOne({
+    follower: followerUsername,
+    following: followingUsername   
+  })
+
+  if (isAlreadyFollowing) {
+    return res.status(200).json({
+      message: "you are already follwing.",
+      follow: isAlreadyFollowing
+    })
+  }
+
+  const followRecord = await followModel.create({
+    follower: followerUsername,
+    following: followingUsername   
+  })
+
+  res.status(201).json({
+    message: `You are now following ${followingUsername}`,
+    follow: followRecord
+  })
+}
+
+
+async function unfollowUserController(req,res) {
     const followerUsername = req.user.username
     const followingUsername = req.params.username
 
 
-    if(followingUsername == followerUsername){
-        return res.status(400).json({
-            message:"you cannot follow yourself."
-        })
-    }  
-
-    const isAlreadyFollowing = await followModel.findOne({
-     follower:followerUsername,
-     following:followerUsername
+    const isUserFollowing = await followModel.findOne({
+        follower:followerUsername,
+        following:followingUsername
     })
 
-    if(isAlreadyFollowing){
-        return res.status(200).json({
-            message:"you are already follwing.",
-            follow :isAlreadyFollowing
-        })
-    }
 
-   const followRecord = await followModel.create({
-    follower:followerUsername,
-    following:followerUsername
-   })
+  if(!isUserFollowing){
+    return res.status(200).json({
+        message:`you are not following ${followerUsername}`
+    })
+  }
 
-res.status(201).json({
-   message: `You are now following ${followingUsername}`,
-    follow:followRecord
-})
+  await followModel.findByIdAndDelete(isUserFollowing._id)
+
+  res.status(200).json({
+    message:`you have unfollow ${followingUsername}`
+  })
 
 }
 
-
-module.exports = followUserController
+module.exports = {followUserController,unfollowUserController}
