@@ -25,4 +25,6 @@ followRouter.post("/accept/:id", identifyUser, acceptRequest)
 // POST /api/follow/reject/:id
 followRouter.post("/reject/:id", identifyUser, rejectRequest)
 
+
+
 module.exports = followRouter
