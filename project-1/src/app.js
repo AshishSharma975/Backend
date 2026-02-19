@@ -14,10 +14,17 @@ app.use(cookieParser())
 const authRouter = require("../src/routes/auth.routes")
 const postRouter = require("./routes/post.routes")
 const userRouter = require("../src/routes/user.routes")
+const followRouter = require("../src/routes/follow.routes")
+
+
 
 // using routes
 app.use("/api/post", postRouter)
 app.use("/api/auth",authRouter)
 app.use("/api/users",userRouter)
+app.use("/api/follow",followRouter)
+
+
+
 connectDB()
 module.exports = app
