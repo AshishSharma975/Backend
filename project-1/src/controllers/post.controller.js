@@ -3,7 +3,7 @@ const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const { Folders } = require("@imagekit/nodejs/resources.js");
 const jwt = require("jsonwebtoken");
-
+const likeModel = require("../models/like.model")
 const imageKit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
 });
@@ -64,6 +64,20 @@ async function getPostDetailsController(req, res) {
     message: "post fetched successfully",
     post,
   });
+}
+
+async function likePostController(req,res) {
+  const username = req.user.username
+  const postid = req.params.postId
+
+  const post = await postModel.findById(postid)
+
+  if(!post){
+    return res.status(404).json({
+      message:"post not found.",
+
+    })
+  }
 }
 
 module.exports = {
