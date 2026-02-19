@@ -66,22 +66,58 @@ async function getPostDetailsController(req, res) {
   });
 }
 
-async function likePostController(req,res) {
-  const username = req.user.username
-  const postid = req.params.postId
+async function likePostController(req, res) {
+  try {
+    const username = req.user.username
+    const postId = req.params.postId
 
-  const post = await postModel.findById(postid)
+    if (!postId) {
+      return res.status(400).json({ message: "Post ID is required" })
+    }
 
-  if(!post){
-    return res.status(404).json({
-      message:"post not found.",
+    const post = await postModel.findById(postId)
 
+    if (!post) {
+      return res.status(404).json({
+        message: "post not found.",
+      })
+    }
+
+   
+    const alreadyLiked = await likeModel.findOne({
+      post: postId,
+      user: username
+    })
+
+    if (alreadyLiked) {
+      return res.status(400).json({
+        message: "You already liked this post."
+      })
+    }
+
+    const like = await likeModel.create({
+      post: postId,
+      user: username
+    })
+
+    return res.status(200).json({
+      message: "post liked successfully.",
+      like
+    })
+
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({
+      message: "Something went wrong"
     })
   }
 }
+
+
 
 module.exports = {
   createPostController,
   getPostController,
   getPostDetailsController,
+  likePostController
 };
