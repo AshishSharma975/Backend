@@ -2,7 +2,6 @@ import React from 'react'
 import "../styles/form.scss";
 import { Link } from 'react-router';
 import { useState } from 'react';
-import axios from 'axios';
 const login = () => {
 
 const [username, setusername] = useState("")
@@ -13,16 +12,6 @@ function handleformsubmit(e) {
     e.preventDefault();
 
 
-    axios.post("http://localhost:3000/api/auth/login",{
-        username,
-        password,
-    },{
-        withCredentials:true
-    }).then((res)=>{
-        console.log(res.data);
-    }).catch((err)=>{
-        console.log(err);
-    })
     
 }
 

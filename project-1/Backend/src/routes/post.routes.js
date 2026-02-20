@@ -6,9 +6,17 @@ const {
   likePostController
 } = require("../controllers/post.controller")
 const postModel = require("../models/post.model")
+
+
 const postRouter = express.Router()
+
+
 const multer = require("multer")
+
+
 const upload = multer({ storage: multer.memoryStorage() })
+
+
 const identifyUser = require("../middlewares/auth.middleware")
 
 // POST /api/post
