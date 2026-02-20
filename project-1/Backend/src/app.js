@@ -14,10 +14,10 @@ app.use(cors({
 }))
 
 // require routes
-const authRouter = require("../src/routes/auth.routes")
+const authRouter = require("./routes/auth.routes")
 const postRouter = require("./routes/post.routes")
-const userRouter = require("../src/routes/user.routes")
-const followRouter = require("../src/routes/follow.routes")
+const userRouter = require("./routes/user.routes")
+const followRouter = require("./routes/follow.routes")
 
 
 
