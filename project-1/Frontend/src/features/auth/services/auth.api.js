@@ -11,7 +11,7 @@ async function register(username,email,password) {
         username,
         email,
         password
-      });
+       });
       return response.data;
     }
     catch(error){
