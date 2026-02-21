@@ -1,42 +1,50 @@
-import React from 'react'
+import React, { useState } from "react";
 import "../styles/form.scss";
-import { Link } from 'react-router';
-import { useState } from 'react';
-const login = () => {
+import { Link } from "react-router-dom";
 
-const [username, setusername] = useState("")
-const [password, setpassword] = useState("")
+const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-
-function handleformsubmit(e) {
+  function handleFormSubmit(e) {
     e.preventDefault();
+    console.log({ username, password }); 
+  }
 
+  return (
+    <main>
+      <div className="form-container">
+        <h1>Login</h1>
 
-    
-}
+        <form onSubmit={handleFormSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-    return (
-        <main>
-            <div className="form-container">
-                <h1>Login</h1>
-                <form onSubmit={handleformsubmit}>
-                    <input  
-                    onInput={(e)=>setusername(e.target.value)}
-                    type="text" 
-                    placeholder="Username" />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-                    <input 
-                    onInput={(e)=>setpassword(e.target.value)}
-                    type="password" 
-                    placeholder="Password" />
+          <button className="button primary-button" type="submit">
+            Login
+          </button>
+        </form>
 
-                    <button type="submit">Login</button>
-                </form>
-             
-             <p>Don't have an account? <Link className='toggle-authform' to="/register">Register</Link></p>
-            </div>
-        </main>
-    )
-}
+        <p>
+          Don't have an account?{" "}
+          <Link className="toggle-authform" to="/register">
+            Register
+          </Link>
+        </p>
+      </div>
+    </main>
+  );
+};
 
-export default login
+export default Login;
