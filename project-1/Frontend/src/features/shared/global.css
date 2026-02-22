@@ -9,10 +9,10 @@
 }
 .button.primary-button {
   background-color: #d30c3d;
-  color: whitesmoke;
+  color: rgb(209, 190, 190);
 }
 .button:active {
-  transform: scale(0.9);
+  transform: scale(0.8);
 }
 
 * {
@@ -24,6 +24,7 @@
 html, body, #root {
   width: 100%;
 }
+
 
 html {
   background-color: rgba(0, 0, 0, 0.801);
