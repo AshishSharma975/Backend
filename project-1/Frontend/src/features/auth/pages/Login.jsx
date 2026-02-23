@@ -1,15 +1,32 @@
 import React, { useState } from "react";
 import "../styles/form.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
+  const { user, loading, handleLogin } = useAuth();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleFormSubmit(e) {
+  const navigate = useNavigate();
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log({ username, password }); 
-  }
+
+    if (!username || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      await handleLogin(username, password);
+      console.log("user logged in...");
+      navigate("/"); 
+    } catch (err) {
+      console.error("Login failed", err);
+    }
+  };
 
   return (
     <main>
@@ -31,8 +48,12 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className="button primary-button" type="submit">
-            Login
+          <button
+            className="button primary-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
