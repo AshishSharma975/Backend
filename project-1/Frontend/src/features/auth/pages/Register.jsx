@@ -1,16 +1,31 @@
 import React, { useState } from "react";
 import "../styles/form.scss";
-import { Link } from "react-router-dom";
-
+import { Link,useNavigate } from "react-router-dom";
+import {useAuth} from "../hooks/useAuth"
 
 const Register = () => {
+
+  const {loading,handleRegister} = useAuth()
+
+
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate()
+
   async function handleFormSubmit(e) {
     e.preventDefault();
-    console.log({ username, email, password }); 
+
+   await handleRegister(username,email,password)
+
+   navigate("/")
+
+  }
+
+  if(loading){
+    return <div><h1>loading...</h1></div>
   }
 
   return (
