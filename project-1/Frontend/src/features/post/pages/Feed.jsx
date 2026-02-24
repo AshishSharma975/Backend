@@ -26,7 +26,7 @@ const Feed = () => {
     ];
 
     return (
-        <main style={{ backgroundColor: '#fafafa', minHeight: '100vh', padding: '20px 0' }}>
+        <main style={{ backgroundColor: '#fafafa', minHeight: '100vh', padding: '20px 0', display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
             {samplePosts.map(post => (
                 <PostCard key={post.id} post={post} />
             ))}
