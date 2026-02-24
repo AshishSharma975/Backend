@@ -8,17 +8,28 @@ const PostCard = ({ post }) => {
         setComment(e.target.value);
     };
 
+    if (!post) return null;
+
+
+    const username = post.user?.username || "Unknown";
+    const profileImage = post.user?.profileImage || "https://via.placeholder.com/150";
+    const postImage = post.imgUrl || "https://via.placeholder.com/600";
+    const caption = post.caption || "";
+    const likesCount = typeof post.likes === "number" ? post.likes.toLocaleString() : "0";
+    const commentsCount = typeof post.commentsCount === "number" ? post.commentsCount : 0;
+    const timeAgo = post.timeAgo || "";
+
     return (
         <div className="post-card">
             {/* Header */}
             <div className="post-header">
                 <div className="user-info">
                     <img
-                        src={post.userProfile || 'https://via.placeholder.com/150'}
-                        alt={post.username}
+                        src={profileImage}
+                        alt={username}
                         className="profile-img"
                     />
-                    <span className="username">{post.username}</span>
+                    <span className="username">{username}</span>
                 </div>
                 <div className="more-options">
                     <svg aria-label="More options" color="#262626" fill="#262626" height="24" role="img" viewBox="0 0 24 24" width="24">
@@ -31,7 +42,7 @@ const PostCard = ({ post }) => {
 
             {/* Media */}
             <div className="post-media">
-                <img src={post.imageUrl || 'https://via.placeholder.com/600'} alt="Post content" />
+                <img src={postImage} alt="Post content" />
             </div>
 
             {/* Actions */}
@@ -63,19 +74,19 @@ const PostCard = ({ post }) => {
 
             {/* Post Stats */}
             <div className="post-stats">
-                <span className="likes-count">{post.likes.toLocaleString()} likes</span>
+                <span className="likes-count">{likesCount} likes</span>
             </div>
 
             {/* Post Content */}
             <div className="post-content">
-                <span className="caption-username">{post.username}</span>
-                <span className="caption-text">{post.caption}</span>
+                <span className="caption-username">{username}</span>
+                <span className="caption-text">{caption}</span>
             </div>
 
             {/* Post Footer */}
             <div className="post-footer">
-                <span className="view-comments">View all {post.commentsCount} comments</span>
-                <span className="timestamp">{post.timeAgo}</span>
+                <span className="view-comments">View all {commentsCount} comments</span>
+                <span className="timestamp">{timeAgo}</span>
             </div>
 
             {/* Comment Input */}
