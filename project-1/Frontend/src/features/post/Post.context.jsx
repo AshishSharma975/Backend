@@ -8,6 +8,8 @@ const [post, setpost] = useState(null)
 const [feed, setfeed] = useState(null)
 
 
+
+
 return(
     <PostContext.Provider value={{loading,setloading,post,setpost,feed,setfeed}}>
         {children}
