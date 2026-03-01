@@ -8,7 +8,6 @@ const Feed = () => {
   useEffect(() => {
     handleGetFeed();
   }, []);
-  console.log("FEED:", feed);
 
   return (
     <main style={{ backgroundColor: "#fafafa", minHeight: "100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
