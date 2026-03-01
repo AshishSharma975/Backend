@@ -4,6 +4,7 @@ import "./features/shared/global.scss";
 import { AuthProvider } from "./features/auth/auth.context";
 import { PostContextProvider } from "./features/post/Post.context";
 
+
 const App = () => {
   return (
     <AuthProvider>
