@@ -1,16 +1,14 @@
 const userModel = require("../models/user.model");
-// const crypto = require("crypto");
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-async function loginController (req, res)  {
+async function loginController(req, res) {
   try {
     const { username, email, password } = req.body;
 
     const user = await userModel.findOne({
       $or: [{ username }, { email }],
-    }).select("+password")
-
+    }).select("+password");
 
     if (!user) {
       return res.status(404).json({
@@ -18,7 +16,7 @@ async function loginController (req, res)  {
       });
     }
 
-    const isPasswordValid = await bcrypt.compare(password,user.password)
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -27,14 +25,20 @@ async function loginController (req, res)  {
     }
 
     const token = jwt.sign(
-      { id: user._id ,
-        username:user.username
+      {
+        id: user._id,
+        username: user.username,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.cookie("token", token);
+    // 🔥 FINAL FIXED COOKIE
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,       // localhost pe false
+      sameSite: "none",    // 🔥 CROSS-ORIGIN FIX
+    });
 
     res.status(200).json({
       message: "login successful",
@@ -48,11 +52,9 @@ async function loginController (req, res)  {
   } catch (err) {
     res.status(500).json({ message: "server error", error: err.message });
   }
-};
+}
 
-
-
- async function RegisterController (req, res) {
+async function RegisterController(req, res) {
   try {
     const { email, username, password, bio, profileImage } = req.body;
 
@@ -69,7 +71,7 @@ async function loginController (req, res)  {
       });
     }
 
-    const hash = await bcrypt.hash(password,10)
+    const hash = await bcrypt.hash(password, 10);
 
     const user = await userModel.create({
       username,
@@ -80,14 +82,20 @@ async function loginController (req, res)  {
     });
 
     const token = jwt.sign(
-      { id: user._id ,
-        username:user.username
+      {
+        id: user._id,
+        username: user.username,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.cookie("token", token);
+    // 🔥 FINAL FIXED COOKIE
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "none",
+    });
 
     res.status(201).json({
       message: "user registered successfully",
@@ -101,13 +109,12 @@ async function loginController (req, res)  {
   } catch (err) {
     res.status(500).json({ message: "server error", error: err.message });
   }
-};
+}
 
+async function getMeController(req, res) {
+  const userid = req.user.id;
 
-async function getMeController(req,res) {
-  const userid = req.user.id
-
-  const user = await userModel.findById(userid)
+  const user = await userModel.findById(userid);
 
   res.status(200).json({
     message: "user found",
@@ -121,7 +128,7 @@ async function getMeController(req,res) {
 }
 
 module.exports = {
-    loginController,
-    RegisterController,
-    getMeController
-}
+  loginController,
+  RegisterController,
+  getMeController,
+};

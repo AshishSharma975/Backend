@@ -1,13 +1,17 @@
 import axios from "axios";
 
-const api = axios.create({
-    baseURL:"http://localhost:3000",
-    withCredentials:true,
-})
-
 export async function getFeed() {
-    const response = await api.get("api/post/feed")
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/post/feed",
+      {
+        withCredentials: true, 
+      }
+    );
 
-    return response.data
+    return response.data;
+  } catch (error) {
+    console.error("getFeed error:", error);
+    throw error;
+  }
 }
-
