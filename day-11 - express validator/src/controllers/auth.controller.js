@@ -10,9 +10,9 @@ export async function registerUser(req, res, next) {
   //   next(err);
 
   try {
-    throw new Error("password is too weak.");
+    throw new Error("user already exist,with same email or phone.");
   } catch (err) {
-    err.status = 400;
+    err.status = 409;
     next(err);
   }
 }
